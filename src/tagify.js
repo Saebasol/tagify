@@ -349,7 +349,8 @@ Tagify.prototype = {
                 lastChild = this.DOM.input.lastChild
 
                 // fixes a Chrome bug, when the last node in `mix-mode` is a tag, the caret appears at the far-top-top, outside the field
-                if( !lastChild || lastChild.tagName != 'BR' )
+                // singleLine 모드일 때는 BR 태그 추가를 방지
+                if( !_s.mixMode.singleLine && (!lastChild || lastChild.tagName != 'BR') )
                     this.DOM.input.insertAdjacentHTML('beforeend', '<br>')
             }
 
@@ -1845,7 +1846,8 @@ Tagify.prototype = {
                     const tagData = getSetTagData(node);
 
                     if( node.tagName == 'BR'  ){
-                        result += "\r\n";
+                        // singleLine 모드일 때는 BR 태그를 공백으로 처리
+                        result += _s.mixMode.singleLine ? " " : "\r\n";
                     }
 
                     if( tagData && isNodeTag.call(that, node) ){
@@ -1858,7 +1860,12 @@ Tagify.prototype = {
                         result += node.textContent;
 
                     else if( node.tagName == 'DIV' || node.tagName == 'P' ){
-                        result += "\r\n";
+                        // singleLine 모드일 때는 DIV, P 태그를 공백으로 처리
+                        if( !_s.mixMode.singleLine ) {
+                            result += "\r\n";
+                        } else {
+                            result += " ";
+                        }
                         //  if( !node.children.length && node.textContent )
                         //  result += node.textContent;
                         iterateChildren(node)

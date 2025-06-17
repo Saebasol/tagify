@@ -34,6 +34,7 @@ export default {
 
     mixMode: {
         insertAfterTag  : '\u00A0',       // String/Node to inject after a tag has been added (see #588)
+        singleLine      : false,          // if true, prevents line breaks and forces single-line behavior like normal input mode
     },
 
     autoComplete: {

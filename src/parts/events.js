@@ -469,9 +469,16 @@ export default {
 
                                 break;
                             }
-                            // currently commented to allow new lines in mixed-mode
-                            // case 'Enter' :
-                            //     // e.preventDefault(); // solves Chrome bug - http://stackoverflow.com/a/20398191/104380
+                            
+                            case 'Enter' : {
+                                // singleLine 모드일 때 Enter 키 방지
+                                if( _s.mixMode.singleLine ) {
+                                    e.preventDefault();
+                                    return;
+                                }
+                                // 기본적으로는 새 줄을 허용 (기존 동작 유지)
+                                break;
+                            }
                         }
 
                         return true
@@ -1069,6 +1076,11 @@ export default {
                 record.addedNodes.forEach(addedNode => {
                     // fix chrome's placing '<div><br></div>' everytime ENTER key is pressed, and replace with just `<br'
                     if( addedNode.outerHTML == '<div><br></div>' ){
+                        // singleLine 모드일 때는 BR 태그 추가를 방지
+                        if( this.settings.mixMode.singleLine ) {
+                            addedNode.remove();
+                            return;
+                        }
                         addedNode.replaceWith(document.createElement('br'))
                     }
 
